@@ -75,9 +75,9 @@ int length(List L){
 	return(L->length);
 }
 
-int indexL(List L){
+int index(List L){
 	if(L == NULL){
-		printf("List Error: calling indexL() on an empty list\n");
+		printf("List Error: calling index() on an empty list\n");
 		exit(1);
 	}
 	return(L->index);
@@ -318,13 +318,13 @@ void deleteBack(List L){
 	freeNode(&N);
 }
 
-void deleteL(List L){
+void delete(List L){
 	if(L == NULL){
-		printf("List Error: cannot call deleteL() on NULL List reference\n");
+		printf("List Error: cannot call delete() on NULL List reference\n");
 		exit(1);
 	}
 	if(L->length == 0){
-		printf("List Error: cannot call deleteL() on an empty List\n");
+		printf("List Error: cannot call delete() on an empty List\n");
 		exit(1);
 	}
 	if(L->cursor == L->front){

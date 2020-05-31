@@ -65,8 +65,10 @@ void freeMatrix(Matrix *pM)
 void printMatrix(FILE *out, Matrix M) {
    for(int i = 0; i < mGetSize(M); i++) {
       if(length(M->row[i]) > 0)
+      {
          printf("%d", i);
          printList(out, M->row[i]);
+      }
    }
 }
 
@@ -116,8 +118,8 @@ List mAddSub(List P, List Q, int go) {
    	ret = -1.0;
    }
 
-   while(indexL(P) >= 0 || indexL(P) >= 0) {
-      if(indexL(P) >= 0 && indexL(Q) >= 0) {
+   while(index(P) >= 0 || index(P) >= 0) {
+      if(index(P) >= 0 && index(Q) >= 0) {
          struct Entry a = *(struct Entry *) get(P);
          struct Entry b = *(struct Entry *) get(Q);
          if(a.column > b.column) {
@@ -139,7 +141,7 @@ List mAddSub(List P, List Q, int go) {
             moveNext(P);
             moveNext(Q);
          }
-      } else if(indexL(P) >= 0) {
+      } else if(index(P) >= 0) {
          struct Entry a = *(struct Entry *) get(P);
          append(list, newEntry(a.column, a.data));
          moveNext(P);
@@ -157,7 +159,7 @@ static double vectorDot(List P, List Q) {
    double product = 0.0;
    moveFront(P);
    moveFront(Q);
-   while(indexL(P) >= 0 && indexL(Q) >= 0) 
+   while(index(P) >= 0 && index(Q) >= 0) 
    {
       struct Entry entry1 = *(struct Entry *) get(P);
       struct Entry entry2 = *(struct Entry *) get(Q);
@@ -183,7 +185,7 @@ void changeEntry(Matrix M, int i, int j, double x) {
        printf("error 1\n");
    }
    moveFront(M->row[i]);
-   while(indexL(M->row[i]) >= 0) {
+   while(index(M->row[i]) >= 0) {
       struct Entry entry = *(struct Entry *)get(M->row[i]);
       if(entry.column == j) {
      	   found = 1;
@@ -193,7 +195,7 @@ void changeEntry(Matrix M, int i, int j, double x) {
       }
       if(found) {
          if(x == 0.0) {
-            deleteL(M->row[i]);
+            delete(M->row[i]);
             return;
          } 
          else { 
@@ -208,15 +210,15 @@ void changeEntry(Matrix M, int i, int j, double x) {
    if(!found && x != 0.0) 
    {
       moveFront(M->row[i]);
-      if(indexL(M->row[i]) == -1) {
+      if(index(M->row[i]) == -1) {
          append(M->row[i], newEntry(j, x)); 
          return;
       } 
       else {
-         while(indexL(M->row[i]) > -1 && (*(struct Entry *)get(M->row[i])).column < j) {
+         while(index(M->row[i]) > -1 && (*(struct Entry *)get(M->row[i])).column < j) {
             moveNext(M->row[i]);
          }
-         if(indexL(M->row[i]) > -1) {
+         if(index(M->row[i]) > -1) {
             insertBefore(M->row[i], newEntry(j, x)); 
             return;
          } 
@@ -232,7 +234,7 @@ Matrix copy(Matrix A) {
    Matrix matrix = newMatrix(mGetSize(A));
    for(int i = 0; i <= mGetSize(A); i++) {
       moveFront(A->row[i]);
-      while(indexL(A->row[i]) >= 0) {
+      while(index(A->row[i]) >= 0) {
          struct Entry temp = *(struct Entry *) get(A->row[i]);
          changeEntry(matrix, i, temp.column, temp.data);
          moveNext(A->row[i]);
@@ -246,7 +248,7 @@ Matrix transpose(Matrix A)
    Matrix matrix = newMatrix(mGetSize(A));
    for(int i = 0; i < mGetSize(A); i++) {
       moveFront(A->row[i]);
-      while(indexL(A->row[i]) >= 0) {
+      while(index(A->row[i]) >= 0) {
          changeEntry(matrix,(*(struct Entry *)get(A->row[i])).column, i, (*(struct Entry *)get(A->row[i])).data);
          moveNext(A->row[i]);
       }
@@ -258,7 +260,7 @@ Matrix scalarMult(double x, Matrix A) {
    Matrix matrix = copy(A);
    for(int i = 0; i < mGetSize(A); i++) {
       moveFront(matrix->row[i]);
-      while(indexL(matrix->row[i]) >= 0) {
+      while(index(matrix->row[i]) >= 0) {
          struct Entry temp = *(struct Entry *)get(matrix->row[i]);
          changeEntry(matrix, i, temp.column, (x * temp.data));
          moveNext(matrix->row[i]);
